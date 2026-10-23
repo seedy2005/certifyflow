@@ -1,0 +1,53 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      CERTIBOT_ENV: production
+      CERTIBOT_COOKIE_SECURE: "true"
+      CERTIBOT_DATA_DIR: /var/lib/certifyflow
+      CERTIBOT_ENABLE_API_DOCS: "false"
+      CERTIBOT_BACKUP_DIR: /backups
+    volumes:
+      - certifyflow_data:/var/lib/certifyflow
+      - ./backups:/backups
+    expose:
+      - "8000"
+    networks:
+      - proxy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    mem_limit: 1g
+    cpus: 2.0
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - proxy
+volumes:
+  certifyflow_data:
+  caddy_data:
+  caddy_config:
+networks:
+  proxy:
+    ipam:
+      config:
+        - subnet: 10.89.0.0/24

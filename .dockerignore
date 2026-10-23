@@ -1,0 +1,14 @@
+.git
+.venv
+.pytest_cache
+__pycache__
+*.py[cod]
+*.log
+data/
+backups/
+.env
+.env.*
+!.env.example
+app/fonts/google_*.ttf
+tests/
+samples/
