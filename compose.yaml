@@ -4,11 +4,11 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      CERTIBOT_ENV: production
-      CERTIBOT_COOKIE_SECURE: "true"
-      CERTIBOT_DATA_DIR: /var/lib/certifyflow
-      CERTIBOT_ENABLE_API_DOCS: "false"
-      CERTIBOT_BACKUP_DIR: /backups
+      CERTIFYFLOW_ENV: production
+      CERTIFYFLOW_COOKIE_SECURE: "true"
+      CERTIFYFLOW_DATA_DIR: /var/lib/certifyflow
+      CERTIFYFLOW_ENABLE_API_DOCS: "false"
+      CERTIFYFLOW_BACKUP_DIR: /backups
     volumes:
       - certifyflow_data:/var/lib/certifyflow
       - ./backups:/backups

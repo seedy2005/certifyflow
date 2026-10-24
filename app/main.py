@@ -22,15 +22,15 @@ from app.storage import (ROOT,UPLOADS,OUTPUTS,init_db,connect,now,template,job,p
 from app.rendering import render
 
 logger=logging.getLogger('certifyflow.auth')
-APP_ENV=os.getenv('CERTIBOT_ENV','development').lower()
-SESSION_SECRET=os.getenv('CERTIBOT_SESSION_SECRET','')
-ADMIN_USERNAME=os.getenv('CERTIBOT_ADMIN_USERNAME','')
-ADMIN_PASSWORD=os.getenv('CERTIBOT_ADMIN_PASSWORD','')
-COOKIE_SECURE=os.getenv('CERTIBOT_COOKIE_SECURE','true' if APP_ENV=='production' else 'false').lower() in {'1','true','yes'}
-ALLOWED_HOSTS=[x.strip() for x in os.getenv('CERTIBOT_ALLOWED_HOSTS','localhost,127.0.0.1,testserver').split(',') if x.strip()]
-origins=[x.strip() for x in os.getenv('CERTIBOT_CORS_ORIGINS','').split(',') if x.strip()]
-MAX_BYTES=int(os.getenv('CERTIBOT_MAX_UPLOAD_MB','25'))*1024*1024
-MAX_SPREADSHEET_EXPANDED_BYTES=int(os.getenv('CERTIBOT_MAX_SPREADSHEET_EXPANDED_MB','100'))*1024*1024
+APP_ENV=os.getenv('CERTIFYFLOW_ENV','development').lower()
+SESSION_SECRET=os.getenv('CERTIFYFLOW_SESSION_SECRET','')
+ADMIN_USERNAME=os.getenv('CERTIFYFLOW_ADMIN_USERNAME','')
+ADMIN_PASSWORD=os.getenv('CERTIFYFLOW_ADMIN_PASSWORD','')
+COOKIE_SECURE=os.getenv('CERTIFYFLOW_COOKIE_SECURE','true' if APP_ENV=='production' else 'false').lower() in {'1','true','yes'}
+ALLOWED_HOSTS=[x.strip() for x in os.getenv('CERTIFYFLOW_ALLOWED_HOSTS','localhost,127.0.0.1,testserver').split(',') if x.strip()]
+origins=[x.strip() for x in os.getenv('CERTIFYFLOW_CORS_ORIGINS','').split(',') if x.strip()]
+MAX_BYTES=int(os.getenv('CERTIFYFLOW_MAX_UPLOAD_MB','25'))*1024*1024
+MAX_SPREADSHEET_EXPANDED_BYTES=int(os.getenv('CERTIFYFLOW_MAX_SPREADSHEET_EXPANDED_MB','100'))*1024*1024
 AUTH_FAILURES=defaultdict(deque)
 AUTH_LOCK=threading.Lock()
 AUTH_WINDOW_SECONDS=15*60
@@ -40,14 +40,14 @@ PASSWORD_HASH=hashlib.scrypt(ADMIN_PASSWORD.encode('utf-8')[:1024],salt=PASSWORD
 
 @asynccontextmanager
 async def lifespan(_app):
-    if len(SESSION_SECRET)<32: raise RuntimeError('Set CERTIBOT_SESSION_SECRET to a random value of at least 32 characters')
-    if not ADMIN_USERNAME.strip() or len(ADMIN_USERNAME)>120: raise RuntimeError('Set CERTIBOT_ADMIN_USERNAME before starting CertifyFlow')
-    if len(ADMIN_PASSWORD)<16: raise RuntimeError('Set CERTIBOT_ADMIN_PASSWORD to at least 16 characters')
-    if APP_ENV=='production' and not COOKIE_SECURE: raise RuntimeError('CERTIBOT_COOKIE_SECURE must be true in production')
+    if len(SESSION_SECRET)<32: raise RuntimeError('Set CERTIFYFLOW_SESSION_SECRET to a random value of at least 32 characters')
+    if not ADMIN_USERNAME.strip() or len(ADMIN_USERNAME)>120: raise RuntimeError('Set CERTIFYFLOW_ADMIN_USERNAME before starting CertifyFlow')
+    if len(ADMIN_PASSWORD)<16: raise RuntimeError('Set CERTIFYFLOW_ADMIN_PASSWORD to at least 16 characters')
+    if APP_ENV=='production' and not COOKIE_SECURE: raise RuntimeError('CERTIFYFLOW_COOKIE_SECURE must be true in production')
     init_db(); recover_jobs()
     yield
 
-app=FastAPI(title='CertifyFlow - Bulk Certificate Generator',version='1.0.0',docs_url='/docs' if os.getenv('CERTIBOT_ENABLE_API_DOCS','false').lower()=='true' else None,redoc_url=None,openapi_url='/openapi.json' if os.getenv('CERTIBOT_ENABLE_API_DOCS','false').lower()=='true' else None,lifespan=lifespan)
+app=FastAPI(title='CertifyFlow - Bulk Certificate Generator',version='0.1.0',docs_url='/docs' if os.getenv('CERTIFYFLOW_ENABLE_API_DOCS','false').lower()=='true' else None,redoc_url=None,openapi_url='/openapi.json' if os.getenv('CERTIFYFLOW_ENABLE_API_DOCS','false').lower()=='true' else None,lifespan=lifespan)
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self,request,call_next):

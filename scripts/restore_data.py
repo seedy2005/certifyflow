@@ -10,7 +10,7 @@ from pathlib import Path, PurePosixPath
 if len(sys.argv) != 2:
     raise SystemExit("Usage: python scripts/restore_data.py <backup.zip>")
 
-data_dir = Path(os.environ.get("CERTIBOT_DATA_DIR", "./data")).resolve()
+data_dir = Path(os.environ.get("CERTIFYFLOW_DATA_DIR", "./data")).resolve()
 archive_path = Path(sys.argv[1]).resolve()
 if not archive_path.is_file():
     raise SystemExit(f"Backup not found: {archive_path}")

@@ -1,5 +1,15 @@
 # CertifyFlow
 
+![CI](https://github.com/seedy2005/certifyflow/actions/workflows/ci.yml/badge.svg?branch=main)
+![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue)
+![Python 3.11 | 3.12](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)
+
+## Screenshots
+
+| Template designer | Participant field mapping | Generated certificate |
+| --- | --- | --- |
+| ![Template designer](docs/images/template-designer.png) | ![Participant field mapping](docs/images/participant-mapping.png) | ![Generated certificate](docs/images/generated-certificate.png) |
+
 CertifyFlow is a certificate design and batch generation web app. It runs locally or as a single-organizer hosted service. Templates, participant sheets, generated certificates, and SQLite metadata are stored on the server. The app does not provide accounts for multiple organizations.
 
 ## Features
@@ -35,7 +45,7 @@ Start the development server:
 uvicorn app.main:app --reload
 ```
 
-Open http://127.0.0.1:8000 and sign in with `CERTIBOT_ADMIN_USERNAME` and `CERTIBOT_ADMIN_PASSWORD` from `.env`. API docs are disabled by default. Do not expose the development server publicly.
+Open http://127.0.0.1:8000 and sign in with `CERTIFYFLOW_ADMIN_USERNAME` and `CERTIFYFLOW_ADMIN_PASSWORD` from `.env`. API docs are disabled by default. Do not expose the development server publicly.
 
 The default upload limit is 25 MB and expanded XLSX content is capped at 100 MB. A batch accepts at most 1,000 participant rows. Generated PDFs are individually capped below 1 MB.
 
@@ -44,8 +54,8 @@ The default upload limit is 25 MB and expanded XLSX content is capped at 100 MB.
 This example runs one app container behind Caddy, which obtains and renews HTTPS certificates. Use a Linux host with Docker Compose, a public DNS name, and inbound ports 80 and 443 available.
 
 1. Copy `.env.example` to `.env` on the host and create a writable backup directory with `mkdir -p backups && sudo chown 10001:10001 backups`.
-2. Set `DOMAIN` to the DNS name pointing to the host, `CERTIBOT_ALLOWED_HOSTS` to that same name, and set a unique admin username and password (at least 16 characters).
-3. Set `CERTIBOT_SESSION_SECRET` to a fresh random value of at least 32 characters. Keep `.env` private.
+2. Set `DOMAIN` to the DNS name pointing to the host, `CERTIFYFLOW_ALLOWED_HOSTS` to that same name, and set a unique admin username and password (at least 16 characters).
+3. Set `CERTIFYFLOW_SESSION_SECRET` to a fresh random value of at least 32 characters. Keep `.env` private.
 4. Start the service with `docker compose up -d --build`.
 5. Visit `https://<your-domain>` and sign in.
 
@@ -65,16 +75,17 @@ Archives are written to `./backups` on the host. Pause generation and wait for a
 
 | Variable | Purpose |
 | --- | --- |
-| `CERTIBOT_ENV` | Use `production` for hosted deployments. |
-| `CERTIBOT_SESSION_SECRET` | Random secret used to sign login sessions. |
-| `CERTIBOT_ADMIN_USERNAME` / `CERTIBOT_ADMIN_PASSWORD` | One organizer login. |
-| `CERTIBOT_COOKIE_SECURE` | Must be `true` in production; cookies are HTTP-only and SameSite strict. |
-| `CERTIBOT_ALLOWED_HOSTS` | Comma-separated hostnames accepted by the app. |
-| `CERTIBOT_CORS_ORIGINS` | Exact browser origins; leave empty for the bundled same-origin UI. |
-| `CERTIBOT_DATA_DIR` | Private persistent data directory. |
-| `CERTIBOT_MAX_UPLOAD_MB` | Maximum upload size in MB. |
-| `CERTIBOT_MAX_SPREADSHEET_EXPANDED_MB` | Maximum expanded XLSX archive size in MB. |
-| `CERTIBOT_ENABLE_API_DOCS` | Set `true` only when API docs are needed. |
+| `CERTIFYFLOW_ENV` | Use `production` for hosted deployments. |
+| `CERTIFYFLOW_SESSION_SECRET` | Random secret used to sign login sessions. |
+| `CERTIFYFLOW_ADMIN_USERNAME` / `CERTIFYFLOW_ADMIN_PASSWORD` | One organizer login. |
+| `CERTIFYFLOW_COOKIE_SECURE` | Must be `true` in production; cookies are HTTP-only and SameSite strict. |
+| `CERTIFYFLOW_ALLOWED_HOSTS` | Comma-separated hostnames accepted by the app. |
+| `CERTIFYFLOW_CORS_ORIGINS` | Exact browser origins; leave empty for the bundled same-origin UI. |
+| `CERTIFYFLOW_DATA_DIR` | Private persistent data directory. |
+| `CERTIFYFLOW_MAX_UPLOAD_MB` | Maximum upload size in MB. |
+| `CERTIFYFLOW_MAX_SPREADSHEET_EXPANDED_MB` | Maximum expanded XLSX archive size in MB. |
+| `CERTIFYFLOW_ENABLE_API_DOCS` | Set `true` only when API docs are needed. |
+| `CERTIFYFLOW_BACKUP_DIR` | Destination directory for backup archives. |
 | `GOOGLE_FONTS_API_KEY` | Optional Google Fonts catalog API key. |
 
 ## Development checks
@@ -97,7 +108,13 @@ CI runs these checks on Python 3.11 and 3.12 on Linux and Windows. CodeQL scans 
 
 ## Open source project
 
-The project is licensed under AGPL-3.0-only; see [LICENSE](LICENSE). PyMuPDF, used for PDF compression, is offered under AGPL or a commercial license; deployments that cannot meet AGPL terms need to assess the commercial option. See [PyMuPDF licensing](https://pymupdf.readthedocs.io/en/latest/about.html). Contributions and vulnerability reporting are described in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). Before publishing, create the GitHub repository, enable private vulnerability reporting and dependency/security alerts where available, protect the default branch, and configure DNS and host secrets. No repository has been created or published by this project checkout.
+CertifyFlow is licensed under AGPL-3.0-only; see [LICENSE](LICENSE).
+
+PyMuPDF, used for PDF compression, is offered under AGPL or a commercial license. Deployments that cannot meet AGPL terms need to assess the commercial option. See [PyMuPDF licensing](https://pymupdf.readthedocs.io/en/latest/about.html).
+
+- Want to contribute? Read [CONTRIBUTING.md](CONTRIBUTING.md).
+- Found a vulnerability? Follow [SECURITY.md](SECURITY.md). Please don't open a public issue.
+- Everyone participating is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Project layout
 
@@ -107,3 +124,4 @@ The project is licensed under AGPL-3.0-only; see [LICENSE](LICENSE). PyMuPDF, us
 - `samples/`: synthetic demonstration files.
 - `scripts/`: sample and backup utilities.
 - `.github/workflows/`: continuous integration and CodeQL.
+- `RELEASE_NOTES.md`: initial release notes.

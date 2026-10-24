@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from app.rendering import render, compress_pdf
 
-ROOT=Path(os.getenv('CERTIBOT_DATA_DIR','./data')).resolve()
+ROOT=Path(os.getenv('CERTIFYFLOW_DATA_DIR','./data')).resolve()
 UPLOADS=ROOT/'uploads'; OUTPUTS=ROOT/'outputs'; DB=ROOT/'certifyflow.sqlite3'
 UPLOADS.mkdir(parents=True,exist_ok=True); OUTPUTS.mkdir(parents=True,exist_ok=True)
 LOCK=threading.Lock()

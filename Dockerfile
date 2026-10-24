@@ -1,5 +1,5 @@
 FROM python:3.11-slim
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 CERTIBOT_ENV=production CERTIBOT_DATA_DIR=/var/lib/certifyflow
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 CERTIFYFLOW_ENV=production CERTIFYFLOW_DATA_DIR=/var/lib/certifyflow
 WORKDIR /app
 COPY requirements.txt ./requirements.txt
 RUN python -m pip install --no-cache-dir --upgrade pip && python -m pip install --no-cache-dir -r requirements.txt

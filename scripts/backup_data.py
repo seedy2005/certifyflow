@@ -6,8 +6,8 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-data_dir = Path(os.getenv("CERTIBOT_DATA_DIR", "./data")).resolve()
-backup_dir = Path(os.getenv("CERTIBOT_BACKUP_DIR", "./backups")).resolve()
+data_dir = Path(os.getenv("CERTIFYFLOW_DATA_DIR", "./data")).resolve()
+backup_dir = Path(os.getenv("CERTIFYFLOW_BACKUP_DIR", "./backups")).resolve()
 database = data_dir / "certifyflow.sqlite3"
 if not database.is_file():
     raise SystemExit(f"Database not found: {database}")
