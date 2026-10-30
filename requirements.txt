@@ -7,7 +7,7 @@ pypdf==6.21.1
 pandas==2.2.3
 openpyxl==3.1.5
 python-multipart==0.0.32
-PyMuPDF==1.26.1
+PyMuPDF==2.0
 fonttools==4.67.0
 python-dotenv==1.2.4
 itsdangerous==2.2.0
